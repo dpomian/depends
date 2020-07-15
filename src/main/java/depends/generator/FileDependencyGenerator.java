@@ -30,67 +30,96 @@ import java.util.List;
 import depends.entity.CandidateTypes;
 import depends.entity.Entity;
 import depends.entity.FileEntity;
-import depends.entity.PackageEntity;
 import depends.entity.TypeEntity;
 import depends.entity.repo.EntityRepo;
+import depends.matrix.core.DependencyDetail;
 import depends.matrix.core.DependencyMatrix;
 import depends.relations.Relation;
 
-public class FileDependencyGenerator extends DependencyGenerator{
+public class FileDependencyGenerator extends DependencyGenerator {
 	/**
 	 * Build the dependency matrix (without re-mapping file id)
-	 * @param entityRepo which contains entities and relations
+	 * 
+	 * @param repo which contains entities and relations
 	 * @return the generated dependency matrix
 	 */
 	@Override
-	public DependencyMatrix build(EntityRepo entityRepo,List<String> typeFilter) {
-		DependencyMatrix dependencyMatrix = new DependencyMatrix(typeFilter);
-		Iterator<Entity> iterator = entityRepo.entityIterator();
-		System.out.println("Start create dependencies matrix....");
-		while(iterator.hasNext()) {
+	public DependencyMatrix build(EntityRepo repo, List<String> typeFilter) {
+		System.out.println("Creating dependency matrix....");
+		DependencyMatrix matrix = new DependencyMatrix(typeFilter);
+		Iterator<Entity> iterator = repo.entityIterator();
+
+		while (iterator.hasNext()) {
 			Entity entity = iterator.next();
-			if (!entity.inScope()) continue;
-			if (entity instanceof FileEntity){
+
+			// Don't add out-of-scope entities (when does this happen?)
+			if (!entity.inScope()) {
+				continue;
+			}
+
+			// Our top level relationships are between files
+			// So add a node if this entity is a file
+			if (entity instanceof FileEntity) {
 				String name = stripper.stripFilename(entity.getDisplayName());
 				name = filenameWritter.reWrite(name);
-        		dependencyMatrix.addNode(name,entity.getId());
-        	}
-        	int fileEntityFrom = getFileEntityIdNoException(entityRepo, entity);
-        	if (fileEntityFrom==-1) continue;
-        	for (Relation relation:entity.getRelations()) {
-        		Entity relatedEntity = relation.getEntity();
-        		if (relatedEntity==null) continue;
-        		if (relatedEntity instanceof CandidateTypes) {
-        			List<TypeEntity> candidateTypes = ((CandidateTypes)relatedEntity).getCandidateTypes();
-        			for (TypeEntity candidateType:candidateTypes) {
-    	        		if (candidateType.getId()>=0) {
-    	        			int fileEntityTo = getFileEntityIdNoException(entityRepo,candidateType);
-    	        			if (fileEntityTo!=-1) {
-    	        				dependencyMatrix.addDependency(relation.getType(), fileEntityFrom,fileEntityTo,1,buildDescription(entity,candidateType));
-    	        			}
-    	        		}
-        			}
-        		}else {
-	        		if (relatedEntity.getId()>=0) {
-	        			int fileEntityTo = getFileEntityIdNoException(entityRepo,relatedEntity);
-	        			if (fileEntityTo!=-1) {
-	        				dependencyMatrix.addDependency(relation.getType(), fileEntityFrom,fileEntityTo,1,buildDescription(entity,relatedEntity));
-	        			}
-	        		}
-        		}
-        	}
-        }
-		System.out.println("Finish create dependencies matrix....");
+				matrix.addNode(name, entity.getId());
+			}
 
-		return dependencyMatrix;
+			// Get the file ID of our entity
+			int fileEntityFrom = getFileEntityIdNoException(entity);
+
+			// Skip if the file is null or out-of-scope (when does this happen?)
+			if (fileEntityFrom == -1) {
+				continue;
+			}
+
+			for (Relation relation : entity.getRelations()) {
+				Entity relatedEntity = relation.getEntity();
+
+				// Skip related entity when its null (when does this happen?)
+				if (relatedEntity == null) {
+					continue;
+				}
+
+				// If our relatedEntity is not a CandidateTypes, add the dependency as normal
+				if (!(relatedEntity instanceof CandidateTypes)) {
+					addDependency(matrix, relation, fileEntityFrom, entity, relatedEntity);
+					continue;
+				}
+
+				// Otherwise, add dependencies to entities inside the CandidateTypes
+				List<TypeEntity> candidateTypes = ((CandidateTypes) relatedEntity).getCandidateTypes();
+				for (TypeEntity candidateType : candidateTypes) {
+					addDependency(matrix, relation, fileEntityFrom, entity, candidateType);
+				}
+			}
+		}
+
+		System.out.println("Finished creating dependency matrix.");
+		return matrix;
 	}
 
-	private int getFileEntityIdNoException(EntityRepo entityRepo, Entity entity) {
+	private void addDependency(DependencyMatrix matrix, Relation relation, int fileEntityFrom, Entity from, Entity to) {
+		// Skip if null (when does this happen?)
+		if (to.getId() < 0) {
+			return;
+		}
+
+		int fileEntityTo = getFileEntityIdNoException(to);
+
+		if (fileEntityTo != -1) {
+			DependencyDetail detail = buildDescription(from, to);
+			matrix.addDependency(relation.getType(), fileEntityFrom, fileEntityTo, 1, detail);
+		}
+	}
+
+	private int getFileEntityIdNoException(Entity entity) {
 		Entity ancestor = entity.getAncestorOfType(FileEntity.class);
-		if (ancestor==null) {
+
+		if (ancestor == null || !ancestor.inScope()) {
 			return -1;
 		}
-		if (!ancestor.inScope()) return -1;
+
 		return ancestor.getId();
 	}
 
