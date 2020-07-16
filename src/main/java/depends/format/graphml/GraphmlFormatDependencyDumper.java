@@ -22,15 +22,15 @@ public class GraphmlFormatDependencyDumper extends AbstractFormatDependencyDumpe
 
     @Override
     public boolean output() {
-        GDataBuilder gBuilder = new GDataBuilder();
-        GRoot gRoot = gBuilder.build(matrix, new FileAttributes(name));
+        GBuilder gBuilder = new GBuilderCoarse();
+        GDepObject gRoot = gBuilder.build(matrix, new FileAttributes(name));
         toXml(gRoot, composeFilename() + "." + getFormatName());
         return true;
     }
 
-    private void toXml(GRoot gRoot, String graphmlFileName)  {
+    private void toXml(GDepObject gRoot, String graphmlFileName)  {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(GRoot.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(GDepObject.class);
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(gRoot, new FileOutputStream(graphmlFileName));

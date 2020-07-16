@@ -8,8 +8,8 @@ import depends.matrix.core.DependencyMatrix;
 import depends.matrix.core.DependencyPair;
 import depends.matrix.core.DependencyValue;
 
-public class GDataBuilder {
-    public GRoot build(DependencyMatrix matrix, FileAttributes attribute) {
+public class GBuilderCoarse extends GBuilder {
+    public GDepObject build(DependencyMatrix matrix, FileAttributes attribute) {
         ArrayList<GNode> nodes = buildNodes(matrix.getNodes());
         ArrayList<GEdge> edges = buildEdges(matrix.getDependencyPairs());
 
@@ -22,7 +22,7 @@ public class GDataBuilder {
         ArrayList<GGraph> graphs = new ArrayList<GGraph>();
         graphs.add(new GGraph("g0", GEdgeDirection.DIRECTED, nodes, edges));
 
-        return new GRoot(keys, graphs);
+        return new GDepObject(keys, graphs);
     }
 
     private ArrayList<GNode> buildNodes(ArrayList<String> names) {

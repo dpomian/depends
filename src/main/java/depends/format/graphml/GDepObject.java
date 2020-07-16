@@ -8,14 +8,14 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "graphml")
 @XmlType(propOrder = { "keys", "graphs" })
-public class GRoot {
+public class GDepObject {
     private ArrayList<GKey> keys;
     private ArrayList<GGraph> graphs;
 
-    public GRoot() {
+    public GDepObject() {
     }
 
-    public GRoot(ArrayList<GKey> keys, ArrayList<GGraph> graphs) {
+    public GDepObject(ArrayList<GKey> keys, ArrayList<GGraph> graphs) {
         this.keys = keys;
         this.graphs = graphs;
     }

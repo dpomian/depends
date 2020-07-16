@@ -4,11 +4,16 @@ public class DependencyDetail {
 
 	private String src;
 	private String dest;
+	private String srcType;
+	private String destType;
 
-	public DependencyDetail(String src, String dest) {
+	public DependencyDetail(String src, String dest, String srcType, String destType) {
 		this.src = src;
 		this.dest = dest;
+		this.srcType = srcType;
+		this.destType = destType;
 	}
+
 	public String getSrc() {
 		return src;
 	}
@@ -16,10 +21,17 @@ public class DependencyDetail {
 	public String getDest() {
 		return dest;
 	}
-	@Override
-	public String toString() {
-		return src + "->" + dest;
+
+	public String getDestType() {
+		return destType;
 	}
 
-	
+	public String getSrcType() {
+		return srcType;
+	}
+
+	@Override
+	public String toString() {
+		return src + "(" + srcType + ")" + "->" + dest + "(" + destType + ")";
+	}
 }

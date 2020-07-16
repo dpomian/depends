@@ -24,6 +24,7 @@ SOFTWARE.
 
 package depends.generator;
 
+import java.util.HashSet;
 import java.util.List;
 
 import depends.entity.Entity;
@@ -37,24 +38,34 @@ import multilang.depends.util.file.strip.EmptyLeadingNameStripper;
 import multilang.depends.util.file.strip.ILeadingNameStrippper;
 
 public abstract class DependencyGenerator {
-	public abstract DependencyMatrix build(EntityRepo entityRepo,List<String> typeFilter);
+	public abstract DependencyMatrix build(EntityRepo entityRepo, List<String> typeFilter);
 
 	protected ILeadingNameStrippper stripper = new EmptyLeadingNameStripper();
 	protected FilenameWritter filenameWritter = new EmptyFilenameWritter();
 	private boolean generateDetail = false;
-	
+
 	public void setLeadingStripper(ILeadingNameStrippper stripper) {
 		this.stripper = stripper;
 	}
+
 	protected DependencyDetail buildDescription(Entity fromEntity, Entity toEntity) {
-		if (!generateDetail) return null;
+		if (!generateDetail) {
+			return null;
+		}
+
 		String srcName = PackageNamePrefixRemover.remove(fromEntity);
 		String destName = PackageNamePrefixRemover.remove(toEntity);
-		return new DependencyDetail(srcName,destName);
+
+		String srcType = fromEntity.getClass().getSimpleName();
+		String destType = toEntity.getClass().getSimpleName();
+
+		return new DependencyDetail(srcName, destName, srcType, destType);
 	}
+
 	public void setFilenameRewritter(FilenameWritter filenameWritter) {
 		this.filenameWritter = filenameWritter;
 	}
+
 	public void setGenerateDetail(boolean generateDetail) {
 		this.generateDetail = generateDetail;
 	}
