@@ -26,6 +26,7 @@ package depends.format;
 
 import java.util.List;
 
+import depends.format.altjson.AltJsonFormatDependencyDumper;
 import depends.format.detail.DetailTextFormatDependencyDumper;
 import depends.format.dot.DotFormatDependencyDumper;
 import depends.format.dot.DotFullnameDependencyDumper;
@@ -57,6 +58,7 @@ public class DependencyDumper {
 		 	new DetailTextFormatDependencyDumper(dependencyMatrix,projectName,outputDir),
 		 	new XmlFormatDependencyDumper(dependencyMatrix,projectName,outputDir),
 		 	new JsonFormatDependencyDumper(dependencyMatrix,projectName,outputDir),
+			new AltJsonFormatDependencyDumper(dependencyMatrix,projectName,outputDir),
 		 	new ExcelXlsFormatDependencyDumper(dependencyMatrix,projectName,outputDir),
 		 	new ExcelXlsxFormatDependencyDumper(dependencyMatrix,projectName,outputDir),
 		 	new DotFormatDependencyDumper(dependencyMatrix,projectName,outputDir),
