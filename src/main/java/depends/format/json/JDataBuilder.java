@@ -71,7 +71,7 @@ public class JDataBuilder {
 		List<DetailItem>  r = new ArrayList<>();
 		for (DependencyValue dependency : dependencies) {
 			for (DependencyDetail detail:dependency.getDetails()) {
-				r.add(new DetailItem(detail.getSrc(),detail.getDest(),dependency.getType()));
+				r.add(new DetailItem(detail.getSrcLocation(),detail.getDestLocation(),dependency.getType()));
 			}
 		}
 		if (r.size()==0) return null;

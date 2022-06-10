@@ -74,6 +74,8 @@ public abstract class DependencyGenerator {
 		Entity toFile = toEntity.getAncestorOfType(FileEntity.class);
 
 		return new DependencyDetail(
+				fromEntity,
+				toEntity,
 				new LocationInfo(fromObject,fromFile.getQualifiedName(),fromLineNumber),
 				new LocationInfo(toObject,toFile.getQualifiedName(),toEntity.getLine()));
 	}

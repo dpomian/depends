@@ -6,6 +6,7 @@ public class LocationInfo implements Serializable {
 	String object;
 	String file;
 	Integer lineNumber;
+
 	public LocationInfo(String object, String file, Integer lineNumber){
 		if (lineNumber ==null) lineNumber = 0;
 		this.object = object;
@@ -23,6 +24,10 @@ public class LocationInfo implements Serializable {
 
 	public Integer getLineNumber() {
 		return lineNumber;
+	}
+
+	public void setFile(String file) {
+		this.file = file;
 	}
 
 	@Override

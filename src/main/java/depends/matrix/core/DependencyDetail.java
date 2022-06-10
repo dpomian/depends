@@ -1,24 +1,38 @@
 package depends.matrix.core;
 
+import depends.entity.Entity;
 
 public class DependencyDetail {
-	private LocationInfo from;
-	private LocationInfo to;
+	private Entity srcEntity;
+	private Entity destEntity;
+	private LocationInfo srcLocation;
+	private LocationInfo destLocation;
 
-	public DependencyDetail(LocationInfo from, LocationInfo to) {
-		this.from = from;
-		this.to = to;
+	public DependencyDetail(Entity srcEntity, Entity destEntity, LocationInfo srcLocation, LocationInfo destLocation) {
+		this.srcEntity = srcEntity;
+		this.destEntity = destEntity;
+		this.srcLocation = srcLocation;
+		this.destLocation = destLocation;
 	}
+
 	@Override
 	public String toString() {
-		return from + "->" + to;
+		return srcLocation + "->" + destLocation;
 	}
 
-	public LocationInfo getSrc() {
-		return from;
+	public Entity getSrcEntity() {
+		return srcEntity;
 	}
 
-	public LocationInfo getDest() {
-		return to;
+	public Entity getDestEntity() {
+		return destEntity;
+	}
+
+	public LocationInfo getSrcLocation() {
+		return srcLocation;
+	}
+
+	public LocationInfo getDestLocation() {
+		return destLocation;
 	}
 }

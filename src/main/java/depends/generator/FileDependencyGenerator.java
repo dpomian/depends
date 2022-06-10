@@ -68,7 +68,7 @@ public class FileDependencyGenerator extends DependencyGenerator{
     	        			int fileEntityTo = getFileEntityIdNoException(entityRepo,candidateType);
     	        			if (fileEntityTo!=-1) {
 								DependencyDetail detail = buildDescription(entity,candidateType,relation.getFromLine());
-								detail = rewriteDetail(detail);
+								rewriteDetail(detail);
 								dependencyMatrix.addDependency(relation.getType(), fileEntityFrom,fileEntityTo,1,detail);
     	        			}
     	        		}
@@ -78,31 +78,26 @@ public class FileDependencyGenerator extends DependencyGenerator{
 	        			int fileEntityTo = getFileEntityIdNoException(entityRepo,relatedEntity);
 	        			if (fileEntityTo!=-1) {
 							DependencyDetail detail = buildDescription(entity, relatedEntity, relation.getFromLine());
-							detail = rewriteDetail(detail);
+							rewriteDetail(detail);
 							dependencyMatrix.addDependency(relation.getType(), fileEntityFrom,fileEntityTo,1,detail);
 	        			}
 	        		}
         		}
         	}
         }
-		System.out.println("Finish create dependencies matrix....");
+		System.out.println("Finished creating dependency matrix....");
 
 		return dependencyMatrix;
 	}
 
-	private DependencyDetail rewriteDetail(DependencyDetail detail) {
-		if (detail==null) return null;
+	private void rewriteDetail(DependencyDetail detail) {
 		String srcFile = filenameWritter.reWrite(
-				stripper.stripFilename(detail.getSrc().getFile())
-				);
-		String dstFile = filenameWritter.reWrite(
-				stripper.stripFilename(detail.getDest().getFile()));
-		return new DependencyDetail(
-				new LocationInfo(detail.getSrc().getObject(),
-						srcFile, detail.getSrc().getLineNumber())
-		,
-				new LocationInfo(detail.getDest().getObject(),
-						dstFile, detail.getDest().getLineNumber()));
+				stripper.stripFilename(detail.getSrcLocation().getFile()));
+		String destFile = filenameWritter.reWrite(
+				stripper.stripFilename(detail.getDestLocation().getFile()));
+
+		detail.getSrcLocation().setFile(srcFile);
+		detail.getDestLocation().setFile(destFile);
 	}
 
 	private int getFileEntityIdNoException(EntityRepo entityRepo, Entity entity) {
