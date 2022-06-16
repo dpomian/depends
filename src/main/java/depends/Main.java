@@ -31,6 +31,7 @@ import depends.extractor.LangProcessorRegistration;
 import depends.extractor.UnsolvedBindings;
 import depends.format.DependencyDumper;
 import depends.format.detail.UnsolvedSymbolDumper;
+import depends.generator.AllDependencyGenerator;
 import depends.generator.DependencyGenerator;
 import depends.generator.FileDependencyGenerator;
 import depends.generator.FunctionDependencyGenerator;
@@ -168,6 +169,8 @@ public class Main {
 				dependencyGenerator = new FunctionDependencyGenerator();
 			else if (app.getGranularity().equals("structure"))
 				dependencyGenerator = new StructureDependencyGenerator();
+			else if (app.getGranularity().equals("all"))
+				dependencyGenerator = new AllDependencyGenerator();
 			else if (app.getGranularity().equals("file"))
 				/*no action*/;
 			else if (app.getGranularity().startsWith("L"))
