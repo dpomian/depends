@@ -68,7 +68,6 @@ public class FileDependencyGenerator extends DependencyGenerator{
     	        			int fileEntityTo = getFileEntityIdNoException(entityRepo,candidateType);
     	        			if (fileEntityTo!=-1) {
 								DependencyDetail detail = buildDescription(entity,candidateType,relation.getFromLine());
-								rewriteDetail(detail);
 								dependencyMatrix.addDependency(relation.getType(), fileEntityFrom,fileEntityTo,1,detail);
     	        			}
     	        		}
@@ -78,7 +77,6 @@ public class FileDependencyGenerator extends DependencyGenerator{
 	        			int fileEntityTo = getFileEntityIdNoException(entityRepo,relatedEntity);
 	        			if (fileEntityTo!=-1) {
 							DependencyDetail detail = buildDescription(entity, relatedEntity, relation.getFromLine());
-							rewriteDetail(detail);
 							dependencyMatrix.addDependency(relation.getType(), fileEntityFrom,fileEntityTo,1,detail);
 	        			}
 	        		}
@@ -88,16 +86,6 @@ public class FileDependencyGenerator extends DependencyGenerator{
 		System.out.println("Finished creating dependency matrix....");
 
 		return dependencyMatrix;
-	}
-
-	private void rewriteDetail(DependencyDetail detail) {
-		String srcFile = filenameWritter.reWrite(
-				stripper.stripFilename(detail.getSrcLocation().getFile()));
-		String destFile = filenameWritter.reWrite(
-				stripper.stripFilename(detail.getDestLocation().getFile()));
-
-		detail.getSrcLocation().setFile(srcFile);
-		detail.getDestLocation().setFile(destFile);
 	}
 
 	private int getFileEntityIdNoException(EntityRepo entityRepo, Entity entity) {
