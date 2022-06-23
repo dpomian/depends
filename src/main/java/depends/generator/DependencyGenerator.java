@@ -73,6 +73,10 @@ public abstract class DependencyGenerator {
 		Entity fromFile = fromEntity.getAncestorOfType(FileEntity.class);
 		Entity toFile = toEntity.getAncestorOfType(FileEntity.class);
 
+		if (fromFile == null || toFile == null) {
+			return null;
+		}
+
 		DependencyDetail detail = new DependencyDetail(
 				fromEntity,
 				toEntity,

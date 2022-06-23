@@ -29,6 +29,7 @@ import depends.entity.FileEntity;
 import depends.entity.FunctionEntity;
 import depends.entity.EntityNameBuilder;
 import depends.entity.repo.EntityRepo;
+import depends.matrix.core.DependencyDetail;
 import depends.matrix.core.DependencyMatrix;
 import depends.relations.Relation;
 
@@ -56,8 +57,10 @@ public class FunctionDependencyGenerator extends DependencyGenerator {
 					int entityTo = getFunctionEntityIdNoException(relation.getEntity());
 					if (entityTo == -1)
 						continue;
-					dependencyMatrix.addDependency(relation.getType(), entityFrom, entityTo, 1,buildDescription(entity,
-							relation.getEntity(),relation.getFromLine()));
+					DependencyDetail detail = buildDescription(entity,relation.getEntity(),relation.getFromLine());
+					if (detail != null) {
+						dependencyMatrix.addDependency(relation.getType(), entityFrom, entityTo, 1,detail);
+					}
 				}
 			}
 		}

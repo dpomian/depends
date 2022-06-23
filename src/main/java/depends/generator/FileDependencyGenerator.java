@@ -68,7 +68,9 @@ public class FileDependencyGenerator extends DependencyGenerator{
     	        			int fileEntityTo = getFileEntityIdNoException(entityRepo,candidateType);
     	        			if (fileEntityTo!=-1) {
 								DependencyDetail detail = buildDescription(entity,candidateType,relation.getFromLine());
-								dependencyMatrix.addDependency(relation.getType(), fileEntityFrom,fileEntityTo,1,detail);
+								if (detail != null) {
+									dependencyMatrix.addDependency(relation.getType(), fileEntityFrom,fileEntityTo,1,detail);
+								}
     	        			}
     	        		}
         			}
@@ -77,7 +79,9 @@ public class FileDependencyGenerator extends DependencyGenerator{
 	        			int fileEntityTo = getFileEntityIdNoException(entityRepo,relatedEntity);
 	        			if (fileEntityTo!=-1) {
 							DependencyDetail detail = buildDescription(entity, relatedEntity, relation.getFromLine());
-							dependencyMatrix.addDependency(relation.getType(), fileEntityFrom,fileEntityTo,1,detail);
+							if (detail != null) {
+								dependencyMatrix.addDependency(relation.getType(), fileEntityFrom,fileEntityTo,1,detail);
+							}
 	        			}
 	        		}
         		}

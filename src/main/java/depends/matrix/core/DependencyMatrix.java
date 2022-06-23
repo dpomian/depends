@@ -57,7 +57,7 @@ public class DependencyMatrix {
 	public void addDependency(String depType, Integer from, Integer to,  int weight,List<DependencyDetail> details) {
 		if (typeFilter!=null && (!typeFilter.contains(depType)))
 			return;
-		if(from.equals(to) || from == -1 || to == -1) {
+		if(from == null || from == -1 ||to == null || to == -1 || from.equals(to)) {
 		    return;
 		}
 		if (dependencyPairs.get(DependencyPair.key(from,to))==null) {
