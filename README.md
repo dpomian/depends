@@ -17,6 +17,24 @@ and then unzip the ```depends-*version*.tgz``` file in any directory of your com
 
 *Depends* is written in java, so it could be run on any OS with a JRE or JDK environment (like Windows, Linux or Mac OS). 
 
+### Install dependencies
+1. Install depends-utils:
+```shell
+git clone https://github.com/multilang-depends/utils.git depends-utils
+cd depends-utils
+mvn clean install
+```
+2. Install other dependencies:
+```shell
+cd depends
+./lib_install.sh
+```
+3. Generate necessary classes
+```shell
+cd depends
+mvn clean package -DskipTests
+```
+
 ## Run it from command line
 
 Following the single responsibility principle, *Depends* is designed for the purpose of extracting dependencies only. It only provides CLI interface, without GUI. But you can convert the output of *Depends* into the GUI of other tools, such as GraphViz(http://graphviz.org/), PlantUML(http://plantuml.com/), and DV8 (https://www.archdia.com). 
