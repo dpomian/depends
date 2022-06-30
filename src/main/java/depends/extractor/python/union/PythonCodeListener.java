@@ -212,6 +212,21 @@ public class PythonCodeListener extends PythonParserBaseListener{
 		super.enterFuncdef(ctx);
 	}
 
+    @Override
+	public void enterAssign_part(Assign_partContext ctx) {
+		int childCount = ctx.parent.getChildCount();
+		String parent = ctx.parent.toString();
+		for(int c=0; c<childCount; c++) {
+			String ch = ctx.parent.getChild(c).getText();
+			System.out.println(String.format("child: %s", ch));
+		}
+		System.out.println(String.format("parent: %s", parent));
+		for (TerminalNode tn : ctx.getTokens(96)) {
+			System.out.println(tn.getSymbol().getText());
+		}
+		super.enterAssign_part(ctx);
+	}
+
 	@Override
 	public void exitFuncdef(FuncdefContext ctx) {
 		context.exitLastedEntity();
